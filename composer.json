@@ -1,0 +1,12 @@
+{
+    "name": "eslider/wfs-driver",
+    "description": "WFS Driver",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andriy Oblivantsev",
+            "email": "eslider@gmail.com"
+        }
+    ],
+    "require": {}
+}
