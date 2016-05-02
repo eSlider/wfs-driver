@@ -8,5 +8,10 @@
             "email": "eslider@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": ">=3.7",
+    },
+    "require": {
+        "eslider/spatialite": "^0.0.10"
+    }
 }
