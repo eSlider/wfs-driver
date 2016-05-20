@@ -12,11 +12,14 @@
     "phpunit/phpunit": "^3.7"
   },
   "require": {
-    "eslider/spatialite": "^0.0.10"
+    "eslider/spatialite": "0.0.x",
+    "sabre/xml": "^1.4"
   },
   "autoload": {
-    "psr-0": {
-      "WFS\\": "src/"
+    "psr-4": {
+      "WFS\\": "."
     }
-  }
+  },
+  "repositories": [
+  ]
 }
