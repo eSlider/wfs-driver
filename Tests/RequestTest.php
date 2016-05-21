@@ -24,7 +24,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $serviceProvider = new ServiceProvider($caps["ows_ServiceProvider"]);
         $featureTypeList = new FeatureTypeList($caps['FeatureTypeList']);
 
-        //$caps = $driver->convertXmlToSimpleArray(file_get_contents("../Tests/WFS/2.0.0/GetCapabilities.xml"));
+        //$caps = $driver->conve
+        //rtXmlToSimpleArray(file_get_contents("../Tests/WFS/2.0.0/GetCapabilities.xml"));
 
 
         //$featureType = $driver->t($caps);
