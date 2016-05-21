@@ -4,7 +4,10 @@ namespace WFS\Component;
 use Sabre\Xml\Service;
 use WFS\Entity\Constrain;
 use WFS\Entity\FeatureType;
+use WFS\Entity\FeatureTypeList;
+use WFS\Entity\OperationsMetadata;
 use WFS\Entity\ServiceIdentification;
+use WFS\Entity\ServiceProvider;
 
 /**
  * @author Andriy Oblivantsev <eslider@gmail.com>
@@ -23,6 +26,12 @@ class Driver
     /** @var  ServiceIdentification */
     protected $serviceIdentification;
 
+    /** @var OperationsMetadata */
+    protected $operationsMetadata;
+
+    /** @var  ServiceProvider */
+    protected $serviceProvider;
+
     /**
      * Driver constructor.
      *
@@ -40,8 +49,10 @@ class Driver
     {
         $response                    = $this->queryAsArray('GetCapabilities');
         $this->serviceIdentification = new ServiceIdentification($response['ows_ServiceIdentification']);
-        $this->constrains            = $this->typifyConstrains($response["ows_OperationsMetadata"]["ows_Constraint"]);
-        return $this->typifyFeatureTypes($response["FeatureTypeList"]["FeatureType"]);
+        $this->operationsMetadata    = new OperationsMetadata($response['ows_OperationsMetadata']);
+        $this->serviceProvider       = new ServiceProvider($response["ows_ServiceProvider"]);
+        $featureTypeList             = new FeatureTypeList($response['FeatureTypeList']);
+        return $featureTypeList;
     }
 
 

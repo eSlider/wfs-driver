@@ -21,7 +21,6 @@ class RequestTest
         $operations      = new OperationsMetadata($caps['ows_OperationsMetadata']);
         $serviceProvider = new ServiceProvider($caps["ows_ServiceProvider"]);
         $featureTypeList = new FeatureTypeList($caps['FeatureTypeList']);
-        $constrains      = $driver->typifyConstrains($caps['ows_OperationsMetadata']['ows_Constraint']);
 
         //$caps = $driver->convertXmlToSimpleArray(file_get_contents("../Tests/WFS/2.0.0/GetCapabilities.xml"));
 
