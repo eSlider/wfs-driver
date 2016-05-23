@@ -9,8 +9,8 @@ use Wheregroup\WFS\Entity\Capabilities;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-    /** Assets path */
-    const XML_PATH = "Tests/WFS";
+    /** Test XML path */
+    const XML_PATH = "vendor/opengis/wfs/2.0.2/examples/";
 
     /** @var Driver */
     protected $driver;
@@ -25,11 +25,14 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testDescribeFeatureType()
     {
-        $r = $this->driver->convertXmlToSimpleArray(
+        $data = $this->driver->convertXmlToSimpleArray(
             file_get_contents(
-                self::XML_PATH . "/2.0.0/DescribeFeatureType.xml"
+                self::XML_PATH . "DescribeFeatureType/DescribeFeatureType_Example01_Instance.xml"
             )
         );
+
+        $this->assertTrue(is_array($data));
+        $this->assertTrue(array_key_exists('wfs_member', $data));
     }
 
     public function testGetFeature()
@@ -61,12 +64,23 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         static $xml = null;
         if (!$xml) {
             $xml = $this->driver->convertXmlToSimpleArray(
-                file_get_contents(
-                //"vendor/opengis/wfs/2.0.0/examples/GetCapabilities/GetCapabilities_Res_02.xml"
-                    self::XML_PATH . "/2.0.0/GetCapabilities.xml"
-                ));
+                $this->loadXML("GetCapabilities/GetCapabilities_Res_02.xml")
+            );
         }
         return $xml;
+    }
+
+    /**
+     * Load test xml
+     *
+     * @param string $file Relatives XML file path
+     * @return string XML
+     */
+    protected function loadXML($file)
+    {
+        return file_get_contents(
+            self::XML_PATH . $file
+        );
     }
 
 }
