@@ -2,7 +2,7 @@
 namespace WFS\Component;
 
 use Sabre\Xml\Service;
-use SimpleXMLElement;
+use WFS\Entity\Capabilities;
 use WFS\Entity\Constrain;
 use WFS\Entity\FeatureType;
 use WFS\Entity\FeatureTypeList;
@@ -48,12 +48,9 @@ class Driver
      */
     public function getEntityTypes()
     {
-        $response                    = $this->queryAsArray('GetCapabilities');
-        $this->serviceIdentification = new ServiceIdentification($response['ows_ServiceIdentification']);
-        $this->operationsMetadata    = new OperationsMetadata($response['ows_OperationsMetadata']);
-        $this->serviceProvider       = new ServiceProvider($response["ows_ServiceProvider"]);
-        $featureTypeList             = new FeatureTypeList($response['FeatureTypeList']);
-        return $featureTypeList;
+        $response     = $this->queryAsArray('GetCapabilities');
+        $capabilities = new Capabilities($response);
+        return $capabilities->getFeatureTypeList();
     }
 
 
