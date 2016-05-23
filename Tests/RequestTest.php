@@ -2,6 +2,7 @@
 namespace WFS\Tests;
 
 use WFS\Component\Driver;
+use WFS\Entity\Capabilities;
 use WFS\Entity\FeatureTypeList;
 use WFS\Entity\OperationsMetadata;
 use WFS\Entity\ServiceProvider;
@@ -11,27 +12,27 @@ use WFS\Entity\ServiceProvider;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    /** Assets path */
+    const XML_PATH = "Tests/WFS";
+
+    /** @var Driver */
+    protected $driver;
+
     /**
-     * RequestTest constructor.
+     * Setup driver
      */
-    public function __construct()
+    protected function setUp()
     {
-        $capabilitiesXML = "Tests/WFS/2.0.0/GetCapabilities.xml";
-        $wfsURL          = "http://demo.boundlessgeo.com/geoserver/wfs";
-        $driver          = new Driver($wfsURL);
-        $caps            = $driver->convertXmlToSimpleArray(file_get_contents($capabilitiesXML));
-        $operations      = new OperationsMetadata($caps['ows_OperationsMetadata']);
-        $serviceProvider = new ServiceProvider($caps["ows_ServiceProvider"]);
-        $featureTypeList = new FeatureTypeList($caps['FeatureTypeList']);
+        $this->driver = new Driver("http://demo.boundlessgeo.com/geoserver/wfs");
+    }
 
-        //$caps = $driver->conve
-        //rtXmlToSimpleArray(file_get_contents("../Tests/WFS/2.0.0/GetCapabilities.xml"));
-
-
-        //$featureType = $driver->t($caps);
-
-        //$desc = $driver->xml2array(file_get_contents("../tests/wfs/2.0.0/DescribeFeatureType.xml"));
-        //$result = $driver->query('GetCapabilities');
+    public function testDescribeFeatureType()
+    {
+        $r = $this->driver->convertXmlToSimpleArray(
+            file_get_contents(
+                self::XML_PATH . "/2.0.0/DescribeFeatureType.xml"
+            )
+        );
     }
 
     public function testGetFeature()
@@ -42,10 +43,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         //&request=GetFeature
         //&typename=osm:water_areas
         //&outputFormat=text/javascript
-        //&format_options=callback:loadFeatures
-        //&srsname=EPSG:3857
-        //&bbox=-8922952.933898335,5361598.912035402,-8913168.994277833,5371382.851655904,EPSG:3857
-        //&_=1463585466550
+        //&format_options=callback:loadFeatures&srsname=EPSG:3857&bbox=-8922952.933898335,5361598.912035402,-8913168.994277833,5371382.851655904,EPSG:3857&_=1463585466550
+    }
+
+    public function testGetCapabilities()
+    {
+        $caps            = $this->driver->convertXmlToSimpleArray(
+            file_get_contents(
+                //"vendor/opengis/wfs/2.0.0/examples/GetCapabilities/GetCapabilities_Res_02.xml"
+                self::XML_PATH . "/2.0.0/GetCapabilities.xml"
+            ));
+        $capabilities    = new Capabilities($caps);
+        $capabilities->getFeatureTypeList();
     }
 }
-
