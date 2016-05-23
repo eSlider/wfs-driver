@@ -1,14 +1,13 @@
 <?php
 namespace WFS\Component;
 
-use Sabre\Xml\Service;
 use WFS\Entity\Capabilities;
 use WFS\Entity\Constrain;
 use WFS\Entity\FeatureType;
-use WFS\Entity\FeatureTypeList;
 use WFS\Entity\OperationsMetadata;
 use WFS\Entity\ServiceIdentification;
 use WFS\Entity\ServiceProvider;
+use Wheregroup\XML\Util\Parser;
 
 /**
  * @author Andriy Oblivantsev <eslider@gmail.com>
@@ -104,96 +103,11 @@ class Driver
     }
 
     /**
-     * @param string $requestName
-     * @param array  $request
-     * @param array  $map
-     * @return array
-     */
-    public function queryMapped($requestName, array $request = array(), array $map = null)
-    {
-        return $this->xml2array(
-            $this->query($requestName, $request),
-            $map);
-    }
-
-    /**
-     * Convert XML to Array
-     *
-     * @param      $xml
-     * @param null $map
-     * @return array
-     */
-    public function xml2array($xml, $map = null)
-    {
-        $service = new Service();
-        if (is_array($map)) {
-            $service->elementMap = $map;
-        }
-        return $service->parse($xml);
-    }
-
-    /**
-     * @param $xmlElement
-     * @return mixed
-     */
-    public function object2array($xmlElement)
-    {
-        return json_decode(json_encode($xmlElement), true);
-    }
-
-    /**
      * @param $xml
      * @return array
      */
     public function convertXmlToSimpleArray($xml)
     {
-        return $this->object2array(self::cleanXmlFromNamespaces($xml));
-    }
-
-    /**
-     * Loads XML and kills namespaces in the process.
-     * It allows easy usage of namespaced XML code.
-     *
-     * - NameSpaced tags are renamed from <ns:tag to <ns_tag.
-     * - NameSpaced tags are renamed from </ns:tag> to </ns_tag>.
-     * - NameSpaced attributes are renamed from ns:tag=... to ns_tag=....
-     *
-     * @param string $xml XML string
-     * @param string $sxclass XML class name
-     * @param bool $nsattr
-     * @param int $flags
-     * @return SimpleXMLElement
-     */
-    public static function cleanXmlFromNamespaces($xml, $sxclass = 'SimpleXMLElement', $nsattr = false, $flags = null)
-    {
-        // Let's drop namespace definitions
-        if (stripos($xml, 'xmlns=') !== false) {
-            $xml = preg_replace('~[\s]+xmlns=[\'"].+?[\'"]~i', null, $xml);
-        }
-
-        // I know this looks kind of funny but it changes namespaced attributes
-        if (preg_match_all('~xmlns:([a-z0-9]+)=~i', $xml, $matches)) {
-            foreach (($namespaces = array_unique($matches[1])) as $namespace) {
-                $escapedNS = preg_quote($namespace, '~');
-                $xml       = preg_replace('~[\s]xmlns:' . $escapedNS . '=[\'].+?[\']~i', null, $xml);
-                $xml       = preg_replace('~[\s]xmlns:' . $escapedNS . '=["].+?["]~i', null, $xml);
-                $xml       = preg_replace('~([\'"\s])' . $escapedNS . ':~i', '$1' . $namespace . '_', $xml);
-            }
-        }
-        // Let's change <namespace:tag to <namespace_tag ns="namespace"
-        $regexfrom = sprintf('~<([a-z0-9]+):%s~is', !empty($nsattr) ? '([a-z0-9]+)' : null);
-        $regexto   = strlen($nsattr) ? '<$1_$2 ' . $nsattr . '="$1"' : '<$1_';
-        $xml       = preg_replace($regexfrom, $regexto, $xml);
-
-        // Let's change </namespace:tag> to </namespace_tag>
-        $xml = preg_replace('~</([a-z0-9]+):~is', '</$1_', $xml);
-
-        // Default flags I use
-        if (empty($flags)) {
-            $flags = LIBXML_COMPACT | LIBXML_NOBLANKS | LIBXML_NOCDATA;
-        }
-
-        // Now load and return (namespaceless)
-        return $xml = simplexml_load_string($xml, $sxclass, $flags);
+        return Parser::convertXmlToSimpleArray($xml);
     }
 }

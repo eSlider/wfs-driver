@@ -2,6 +2,7 @@
   "name": "eslider/wfs-driver",
   "description": "WFS Driver",
   "license": "MIT",
+  "type": "library",
   "authors": [
     {
       "name": "Andriy Oblivantsev",
@@ -9,17 +10,16 @@
     }
   ],
   "require-dev": {
-    "phpunit/phpunit": "^3.7"
+    "phpunit/phpunit": "^3.7",
+    "wheregroup/xml-parser": "dev-master"
   },
   "require": {
     "eslider/spatialite": "0.0.x",
-    "sabre/xml": "^1.4"
+    "wheregroup/xml-parser": "*"
   },
   "autoload": {
     "psr-4": {
       "WFS\\": "."
     }
-  },
-  "repositories": [
-  ]
+  }
 }

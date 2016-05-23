@@ -5,7 +5,7 @@ use WFS\Component\Driver;
 use WFS\Entity\Capabilities;
 
 /**
- *
+ * WFS Request tests
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {

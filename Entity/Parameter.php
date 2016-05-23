@@ -2,6 +2,8 @@
 
 namespace WFS\Entity;
 
+use Wheregroup\XML\Entity\BaseEntity;
+
 /**
  * Class Parameter
  *
