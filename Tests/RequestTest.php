@@ -2,7 +2,10 @@
 namespace Wheregroup\WFS\Tests;
 
 use Wheregroup\WFS\Component\Driver;
+use Wheregroup\WFS\Component\FeatureRequest;
 use Wheregroup\WFS\Entity\Capabilities;
+use Wheregroup\WFS\Entity\FeatureTypeDescription;
+use Wheregroup\WFS\Entity\Request\Feature;
 
 /**
  * WFS Request tests
@@ -31,19 +34,25 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             )
         );
 
+        $ftd = new FeatureTypeDescription($data);
+        $ftd->getSchemaLocations();
         $this->assertTrue(is_array($data));
         $this->assertTrue(array_key_exists('wfs_member', $data));
     }
 
-    public function testGetFeature()
+    /**
+     * @skip test
+     */
+    public function getFeature()
     {
-        //http://demo.boundlessgeo.com/geoserver/wfs
-        //?service=WFS
-        //&version=1.1.0
-        //&request=GetFeature
-        //&typename=osm:water_areas
-        //&outputFormat=text/javascript
-        //&format_options=callback:loadFeatures&srsname=EPSG:3857&bbox=-8922952.933898335,5361598.912035402,-8913168.994277833,5371382.851655904,EPSG:3857&_=1463585466550
+        $this->driver->getFeature(new Feature(array(
+            'typename'       => "osm:water_areas",
+            'outputFormat'   => "text/javascript",
+            'format_options' => "callback:loadFeatures",
+            'srsname'        => 'EPSG:3857',
+            'bbox'           => '-8922952.933898335,5361598.912035402,-8913168.994277833,5371382.851655904,EPSG:3857',
+            '_'              => '1463585466550',
+        )));
     }
 
     /**
