@@ -1,12 +1,12 @@
 <?php
-namespace WFS\Entity;
+namespace Wheregroup\WFS\Entity;
 
 use Wheregroup\XML\Entity\BaseEntity;
 
 /**
  * Class Phone
  *
- * @package WFS\Entity
+ * @package Wheregroup\WFS\Entity
  * @author  Andriy Oblivantsev <eslider@gmail.com>
  */
 class Phone extends BaseEntity

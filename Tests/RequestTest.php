@@ -1,8 +1,8 @@
 <?php
-namespace WFS\Tests;
+namespace Wheregroup\WFS\Tests;
 
-use WFS\Component\Driver;
-use WFS\Entity\Capabilities;
+use Wheregroup\WFS\Component\Driver;
+use Wheregroup\WFS\Entity\Capabilities;
 
 /**
  * WFS Request tests

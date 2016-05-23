@@ -1,5 +1,5 @@
 <?php
-namespace WFS\Entity;
+namespace Wheregroup\WFS\Entity;
 
 use Wheregroup\XML\Entity\BaseEntity;
 
@@ -13,7 +13,7 @@ class ServiceProvider extends BaseEntity
     /** @var string Service name */
     protected $name;
 
-    /** @var \WFS\Entity\ServiceContact */
+    /** @var \Wheregroup\WFS\Entity\ServiceContact */
     protected $serviceContact;
 
     /**

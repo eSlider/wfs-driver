@@ -1,12 +1,12 @@
 <?php
-namespace WFS\Component;
+namespace Wheregroup\WFS\Component;
 
-use WFS\Entity\Capabilities;
-use WFS\Entity\Constrain;
-use WFS\Entity\FeatureType;
-use WFS\Entity\OperationsMetadata;
-use WFS\Entity\ServiceIdentification;
-use WFS\Entity\ServiceProvider;
+use Wheregroup\WFS\Entity\Capabilities;
+use Wheregroup\WFS\Entity\Constrain;
+use Wheregroup\WFS\Entity\FeatureType;
+use Wheregroup\WFS\Entity\OperationsMetadata;
+use Wheregroup\WFS\Entity\ServiceIdentification;
+use Wheregroup\WFS\Entity\ServiceProvider;
 use Wheregroup\XML\Util\Parser;
 
 /**

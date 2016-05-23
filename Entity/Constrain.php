@@ -1,5 +1,5 @@
 <?php
-namespace WFS\Entity;
+namespace Wheregroup\WFS\Entity;
 
 use Wheregroup\XML\Entity\BaseEntity;
 

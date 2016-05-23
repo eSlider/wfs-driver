@@ -1,12 +1,12 @@
 <?php
-namespace WFS\Entity;
+namespace Wheregroup\WFS\Entity;
 
 use Wheregroup\XML\Entity\BaseEntity;
 
 /**
  * Class Capabilities
  *
- * @package WFS\Entity
+ * @package Wheregroup\WFS\Entity
  * @author  Andriy Oblivantsev <eslider@gmail.com>
  */
 class Capabilities extends BaseEntity
@@ -17,16 +17,16 @@ class Capabilities extends BaseEntity
     /** @var string */
     protected $updateSequence;
 
-    /** @var \WFS\Entity\ServiceIdentification */
+    /** @var \Wheregroup\WFS\Entity\ServiceIdentification */
     protected $serviceIdentification;
 
-    /** @var \WFS\Entity\FeatureTypeList */
+    /** @var \Wheregroup\WFS\Entity\FeatureTypeList */
     protected $featureTypeList;
 
-    /** @var \WFS\Entity\ServiceProvider */
+    /** @var \Wheregroup\WFS\Entity\ServiceProvider */
     protected $serviceProvider;
 
-    /** @var \WFS\Entity\OperationsMetadata */
+    /** @var \Wheregroup\WFS\Entity\OperationsMetadata */
     protected $operationsMetadata;
 
     /** @var  array */
