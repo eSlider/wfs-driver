@@ -32,6 +32,9 @@ class Capabilities extends BaseEntity
     /** @var  array */
     protected $filter_Capabilities;
 
+    /** @var string URL */
+    protected $schemaLocations;
+
     /**
      * @return string
      */
@@ -78,6 +81,14 @@ class Capabilities extends BaseEntity
     public function getFilterCapabilities()
     {
         return $this->filter_Capabilities;
+    }
+
+    /**
+     * @param string $schemaLocations
+     */
+    public function setSchemaLocation($schemaLocations)
+    {
+        $this->schemaLocations = preg_split('/\s+/', $schemaLocations);
     }
 
 }

@@ -3,6 +3,7 @@ namespace Wheregroup\WFS\Tests;
 
 use Wheregroup\WFS\Component\Driver;
 use Wheregroup\WFS\Entity\Capabilities;
+use Wheregroup\WFS\Entity\FeatureType;
 
 /**
  * WFS Request tests
@@ -16,21 +17,41 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     protected $driver;
 
     /**
-     * Setup driver
+     * @test
      */
-    protected function setUp()
+    public function getCapabilities()
     {
-        $this->driver = new Driver("http://demo.boundlessgeo.com/geoserver/wfs");
+        $list = $this->fetchTestXmlFiles("GetCapabilities/*_Res_*.xml", function ($data, $filePath) {
+            return new Capabilities($data, true);
+        });
     }
+
+    /**
+     * @test
+     */
+    public function describeFeatureType()
+    {
+        $list = $this->fetchTestXmlFiles("DescribeFeatureType/*_Response*", function ($data, $filePath) {
+            return $data;
+        });
+    }
+
+
+    /**
+     * @test
+     */
+    public function getFeature()
+    {
+        $list = $this->fetchTestXmlFiles("GetFeature/*Res.xml", function ($data, $filePath) {
+            return $data;
+        });
+        var_dump($list);
+    }
+
 
     public function testDescribeFeatureType()
     {
-        $data = $this->driver->convertXmlToSimpleArray(
-            file_get_contents(
-                self::XML_PATH . "DescribeFeatureType/DescribeFeatureType_Example01_Instance.xml"
-            )
-        );
-
+        $data = $this->readXML("DescribeFeatureType/DescribeFeatureType_Example01_Instance.xml");
         $this->assertTrue(is_array($data));
         $this->assertTrue(array_key_exists('wfs_member', $data));
     }
@@ -47,40 +68,43 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     */
-    public function getCapabilities()
-    {
-        $xml          = $this->testShrinkAndConvertXML();
-        $capabilities = new Capabilities($xml);
-        $capabilities->getFeatureTypeList();
-    }
-
-    /**
+     * @param $uri
      * @return array
      */
-    public function testShrinkAndConvertXML()
+    protected function readXML($uri)
     {
-        static $xml = null;
-        if (!$xml) {
-            $xml = $this->driver->convertXmlToSimpleArray(
-                $this->loadXML("GetCapabilities/GetCapabilities_Res_02.xml")
+        return $this
+            ->driver
+            ->convertXmlToSimpleArray(
+                file_get_contents($uri)
             );
-        }
-        return $xml;
     }
 
     /**
-     * Load test xml
-     *
-     * @param string $file Relatives XML file path
-     * @return string XML
+     * @param string $globPathRule Glob path rule
+     * @param callable $callback
+     * @return array
      */
-    protected function loadXML($file)
+    protected function fetchTestXmlFiles($globPathRule, callable $callback)
     {
-        return file_get_contents(
-            self::XML_PATH . $file
-        );
+        $list = array();
+        foreach (glob(self::XML_PATH . $globPathRule) as $filePath) {
+            $r = $callback($this->readXML($filePath), $filePath);
+            if (!$r) {
+                break;
+            }
+            $list[] = $r;
+        }
+        return $list;
     }
+
+    /**
+     * Setup driver
+     */
+    protected function setUp()
+    {
+        $this->driver = new Driver("http://demo.boundlessgeo.com/geoserver/wfs");
+    }
+
 
 }
