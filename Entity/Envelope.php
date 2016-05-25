@@ -55,7 +55,7 @@ class Envelope extends BaseEntity
         static $srid;
 
         if (!$srid) {
-            $parts = explode(':', $this->defaultCRS);
+            $parts = explode(':', $this->srsName);
             $srid  = end($parts);
         }
 
