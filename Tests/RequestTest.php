@@ -3,6 +3,7 @@ namespace Wheregroup\WFS\Tests;
 
 use Wheregroup\WFS\Component\Driver;
 use Wheregroup\WFS\Entity\Capabilities;
+use Wheregroup\WFS\Entity\FeatureCollection;
 use Wheregroup\WFS\Entity\FeatureType;
 
 /**
@@ -36,14 +37,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         });
     }
 
-
     /**
      * @test
      */
     public function getFeature()
     {
         $list = $this->fetchTestXmlFiles("GetFeature/*Res.xml", function ($data, $filePath) {
-            return $data;
+            $featureCollection = new FeatureCollection($data);
+            $members           = $featureCollection->getMembers();
+            return $featureCollection;
         });
         var_dump($list);
     }
