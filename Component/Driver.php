@@ -5,6 +5,7 @@ use Wheregroup\WFS\Entity\Capabilities;
 use Wheregroup\WFS\Entity\Constrain;
 use Wheregroup\WFS\Entity\FeatureType;
 use Wheregroup\WFS\Entity\OperationsMetadata;
+use Wheregroup\WFS\Entity\Request\Feature;
 use Wheregroup\WFS\Entity\ServiceIdentification;
 use Wheregroup\WFS\Entity\ServiceProvider;
 use Wheregroup\XML\Util\Parser;
@@ -47,11 +48,18 @@ class Driver
      */
     public function getEntityTypes()
     {
-        $response     = $this->queryAsArray('GetCapabilities');
-        $capabilities = new Capabilities($response);
-        return $capabilities->getFeatureTypeList();
+        return $this->getCapabilities()->getFeatureTypeList();
     }
 
+    /**
+     * @param Feature $featureRequest
+     * @return array
+     * @throws \Exception
+     */
+    public function getFeature(Feature $featureRequest)
+    {
+        return $this->queryAsArray('getFeature', $featureRequest->toXML());
+    }
 
     /**
      * @param FeatureType $featureType
@@ -97,7 +105,12 @@ class Driver
 
         if (isset($array["ows_Exception"])) {
             $details = $array["ows_Exception"];
-            throw new \Exception("WFS:" . $details["exceptionCode"] . ':' . $details["ows_ExceptionText"]);
+            throw new \Exception(
+                "WFS:"
+                . $details['@attributes']['exceptionCode']
+                . ':'
+                . $details['ows_ExceptionText']
+            );
         }
         return $array;
     }
@@ -109,5 +122,16 @@ class Driver
     public function convertXmlToSimpleArray($xml)
     {
         return Parser::convertXmlToSimpleArray($xml);
+    }
+
+    /**
+     * @return Capabilities
+     * @throws \Exception
+     */
+    protected function getCapabilities()
+    {
+        $response     = $this->queryAsArray('GetCapabilities');
+        $capabilities = new Capabilities($response);
+        return $capabilities;
     }
 }
