@@ -4,7 +4,7 @@ namespace Wheregroup\WFS\Tests;
 use Wheregroup\WFS\Component\Driver;
 use Wheregroup\WFS\Entity\Capabilities;
 use Wheregroup\WFS\Entity\FeatureCollection;
-use Wheregroup\WFS\Entity\FeatureType;
+use Wheregroup\WFS\Entity\Schema;
 
 /**
  * WFS Request tests
@@ -18,6 +18,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     protected $driver;
 
     /**
+     * Generates a metadata document describing a WFS service provided by server
+     * as well as valid WFS operations and parameters
+     *
      * @test
      */
     public function getCapabilities()
@@ -28,16 +31,32 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Returns a description of feature types supported by a WFS service
+     *
      * @test
      */
     public function describeFeatureType()
     {
         $list = $this->fetchTestXmlFiles("DescribeFeatureType/*_Response*", function ($data, $filePath) {
-            return $data;
+            return new Schema($data, true);
         });
     }
 
     /**
+     * Retrieves the value of a feature property
+     * or part of the value of a complex feature property
+     * from the data store for a set of features identified
+     * using a query expression
+     *
+     * @test
+     */
+    public function getPropertyValue()
+    {
+    }
+
+    /**
+     * Returns a selection of features from a data source including geometry and attribute values
+     *
      * @test
      */
     public function getFeature()
@@ -50,13 +69,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         var_dump($list);
     }
 
-
-    public function testDescribeFeatureType()
-    {
-        $data = $this->readXML("DescribeFeatureType/DescribeFeatureType_Example01_Instance.xml");
-        $this->assertTrue(is_array($data));
-        $this->assertTrue(array_key_exists('wfs_member', $data));
-    }
 
     public function testGetFeature()
     {
