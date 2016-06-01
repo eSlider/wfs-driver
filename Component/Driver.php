@@ -35,6 +35,9 @@ class Driver
 
     protected $cacheQueries;
 
+    /** @var array Query parameters */
+    protected $parameters = array();
+
     /**
      * Driver constructor.
      *
@@ -43,7 +46,7 @@ class Driver
      */
     public function __construct($url, $cache = false)
     {
-        $this->url = $url;
+        $this->prepareUrl($url);
         $this->setCacheQueries($cache);
         $this->debugging = $cache;
     }
@@ -91,7 +94,7 @@ class Driver
                 array_merge(array(
                     'service' => 'WFS',
                     'request' => $requestName,
-                ), $request));
+                ), $this->parameters, $request));
         if($this->cacheQueries){
             $filePath = "Cache/" . md5($url) . ".xml";
             if ( !file_exists($filePath)) {
@@ -160,5 +163,17 @@ class Driver
     public function setCacheQueries($cacheQueries)
     {
         $this->cacheQueries = $cacheQueries;
+    }
+
+    /**
+     * Prepare URL for queries.
+     *
+     * @param string $url URL string
+     */
+    protected function prepareUrl($url)
+    {
+        $xurl = parse_url($url);
+        parse_str($xurl["query"], $this->parameters);
+        $this->url = preg_replace('/\?.+$/', null, $url);
     }
 }
