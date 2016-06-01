@@ -16,13 +16,13 @@ use Wheregroup\XML\Util\Parser;
 class Driver
 {
     /** @var string URL */
+    protected $debugging = true;
+
+    /** @var string URL */
     protected $url;
 
     /** @var  Constrain */
     protected $constrains;
-
-    /** @var string Last URL request */
-    protected $_lastUrl;
 
     /** @var  ServiceIdentification */
     protected $serviceIdentification;
@@ -33,14 +33,19 @@ class Driver
     /** @var  ServiceProvider */
     protected $serviceProvider;
 
+    protected $cacheQueries;
+
     /**
      * Driver constructor.
      *
      * @param string $url
+     * @param bool   $cache
      */
-    public function __construct($url)
+    public function __construct($url, $cache = false)
     {
         $this->url = $url;
+        $this->setCacheQueries($cache);
+        $this->debugging = $cache;
     }
 
     /**
@@ -48,7 +53,7 @@ class Driver
      */
     public function getEntityTypes()
     {
-        return $this->getCapabilities()->getFeatureTypeList();
+        return $this->getCapabilities()->getFeatureTypes();
     }
 
     /**
@@ -81,14 +86,26 @@ class Driver
      */
     public function query($requestName, array $request = array())
     {
-        $url            = $this->url . '?' .
+        $url      = $this->url . '?' .
             http_build_query(
                 array_merge(array(
                     'service' => 'WFS',
                     'request' => $requestName,
                 ), $request));
-        $this->_lastUrl = $url;
-        return implode(file($url));
+        if($this->cacheQueries){
+            $filePath = "Cache/" . md5($url) . ".xml";
+            if ( !file_exists($filePath)) {
+                $xmlContent = implode(file($url));
+                file_put_contents($filePath, $xmlContent);
+            } else {
+                $xmlContent = implode(file($filePath));
+
+            }
+        }else{
+            $xmlContent = implode(file($url));
+        }
+
+        return $xmlContent;
     }
 
     /**
@@ -128,10 +145,20 @@ class Driver
      * @return Capabilities
      * @throws \Exception
      */
-    protected function getCapabilities()
+    public function getCapabilities()
     {
         $response     = $this->queryAsArray('GetCapabilities');
-        $capabilities = new Capabilities($response);
+        $capabilities = new Capabilities($response, $this->debugging);
         return $capabilities;
+    }
+
+    /**
+     * Cache queries
+     *
+     * @param boolean $cacheQueries
+     */
+    public function setCacheQueries($cacheQueries)
+    {
+        $this->cacheQueries = $cacheQueries;
     }
 }

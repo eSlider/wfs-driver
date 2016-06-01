@@ -14,6 +14,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /** Test XML path */
     const XML_PATH = "vendor/opengis/wfs/2.0.2/examples/";
 
+    /** WFS test server url */
+    const WFS_URL = "http://localhost/cgi-bin/mapserv?map=/data/umn/germany/germany_wfs_server.map";
+
     /** @var Driver */
     protected $driver;
 
@@ -25,9 +28,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function getCapabilities()
     {
-        $list = $this->fetchTestXmlFiles("GetCapabilities/*_Res_*.xml", function ($data, $filePath) {
+        $list         = $this->fetchTestXmlFiles("GetCapabilities/*_Res_*.xml", function ($data, $filePath) {
             return new Capabilities($data, true);
         });
+        $capabilities = $this->driver->getCapabilities();
+        $featureTypes = $capabilities->getFeatureTypes();
     }
 
     /**
@@ -95,7 +100,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $globPathRule Glob path rule
+     * @param string   $globPathRule Glob path rule
      * @param callable $callback
      * @return array
      */
@@ -117,7 +122,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->driver = new Driver("http://demo.boundlessgeo.com/geoserver/wfs");
+        $this->driver = new Driver(self::WFS_URL, true);
     }
 
 
