@@ -1,0 +1,8 @@
+servers:
+  http://webgis.regione.sardegna.it/geoserver/ows?service=WFS&request=GetCapabilities
+  http://geomap.reteunitaria.piemonte.it/ws/gsareprot/rp-01/areeprotwfs/wfs_gsareprot_1?service=WFS&request=getCapabilities
+  http://demo.opengeo.org/geoserver/wfs?service=wfs&version=1.1.0&request=getCapabilities
+  http://mrdata.usgs.gov/services/mt?request=getcapabilities&service=WFS&version=1.0.0&
+  http://mrdata.usgs.gov/services/tx?request=getcapabilities&service=WFS&version=1.0.0&
+  http://mrdata.usgs.gov/services/mrds?request=getcapabilities&service=WFS&version=1.0.0
+  http://sdi.geoportal.gov.pl/wfs_prg/wfservice.aspx?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=1.1.0
