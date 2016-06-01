@@ -20,8 +20,8 @@ class Capabilities extends BaseEntity
     /** @var \Wheregroup\WFS\Entity\ServiceIdentification */
     protected $serviceIdentification;
 
-    /** @var \Wheregroup\WFS\Entity\FeatureTypeList */
-    protected $featureTypeList;
+    /** @var \Wheregroup\WFS\Entity\FeatureType[] */
+    protected $featureTypes;
 
     /** @var \Wheregroup\WFS\Entity\ServiceProvider */
     protected $serviceProvider;
@@ -54,9 +54,9 @@ class Capabilities extends BaseEntity
     /**
      * @return FeatureTypeList
      */
-    public function getFeatureTypeList()
+    public function getFeatureTypes()
     {
-        return $this->featureTypeList;
+        return $this->featureTypes;
     }
 
     /**
@@ -89,6 +89,16 @@ class Capabilities extends BaseEntity
     public function setSchemaLocation($schemaLocations)
     {
         $this->schemaLocations = preg_split('/\s+/', $schemaLocations);
+    }
+
+    /**
+     * Set feature types
+     *
+     * @param $list
+     */
+    public function setFeatureTypeList($list)
+    {
+        $this->fill($list);
     }
 
 }

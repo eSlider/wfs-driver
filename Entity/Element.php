@@ -21,4 +21,16 @@ class Element extends BaseEntity
 
     /** @var \Wheregroup\WFS\Entity\SimpleType[] */
     protected $simpleType;
+
+    protected $valueList;
+    protected $metadata;
+
+    /**
+     * @param mixed $valueList
+     */
+    public function setValueList($valueList)
+    {
+        $values          = reset($valueList);
+        $this->valueList = is_array($values) ? $values : array($values);
+    }
 }

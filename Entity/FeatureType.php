@@ -20,7 +20,10 @@ class FeatureType extends BaseEntity
     protected $maxX;
     protected $maxY;
 
-    /**
+    /** @var \Wheregroup\WFS\Entity\Element[] */
+    protected $elements;
+
+    /**D
      * @return mixed
      */
     public function getMaxX()
@@ -61,6 +64,14 @@ class FeatureType extends BaseEntity
     }
 
     /**
+     * @param mixed $extendedDescription
+     */
+    public function setExtendedDescription($extendedDescription)
+    {
+        $this->fill($extendedDescription);
+    }
+
+    /**
      * @param $data
      */
     protected function setOws_WGS84BoundingBox($data)
@@ -80,7 +91,7 @@ class FeatureType extends BaseEntity
      */
     protected function setOws_Keywords($data)
     {
-        $this->keywords = $data["ows_Keyword"];
+        $this->keywords = reset($data);
     }
 
     /**
