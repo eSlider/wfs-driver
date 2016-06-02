@@ -19,7 +19,9 @@ class FeatureCollection extends BaseEntity
     /** @var Envelope */
     protected $boundedBy;
 
-    protected $member;
+
+    /** @var \Wheregroup\WFS\Entity\Member[] */
+    protected $members;
 
     /**
      * Get schema location URL's
@@ -65,18 +67,10 @@ class FeatureCollection extends BaseEntity
     }
 
     /**
-     * @todo fix getting members
+     *
      */
     public function getMembers()
     {
-        $list = array();
-        foreach ($this->member as $k => $member) {
-            if (is_numeric($k)) {
-                    $list[] = current(array_values($member));
-            }else{
-                $list[] = current(array_values($member));
-            }
-        }
-        return $list;
+        return $this->members;
     }
 }

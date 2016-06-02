@@ -6,6 +6,7 @@ use Wheregroup\WFS\Entity\Constrain;
 use Wheregroup\WFS\Entity\FeatureType;
 use Wheregroup\WFS\Entity\OperationsMetadata;
 use Wheregroup\WFS\Entity\Request\Feature;
+use Wheregroup\WFS\Entity\Schema;
 use Wheregroup\WFS\Entity\ServiceIdentification;
 use Wheregroup\WFS\Entity\ServiceProvider;
 use Wheregroup\XML\Util\Parser;
@@ -37,6 +38,9 @@ class Driver
 
     /** @var array Query parameters */
     protected $parameters = array();
+
+    /** @var string Protocol version */
+    protected $protocolVersion;
 
     /**
      * Driver constructor.
@@ -76,8 +80,12 @@ class Driver
      */
     public function describeFeatureType(FeatureType $featureType)
     {
-        return $this->queryAsArray('DescribeFeatureType',
-            array('TypeName' => $featureType->getName()));
+        $result = $this->queryAsArray('DescribeFeatureType',
+            array(
+                'version'  => $this->getProtocolVersion(),
+                'TypeName' => $featureType->getName()
+            ));
+        return new Schema($result, true);
     }
 
     /**
@@ -152,6 +160,7 @@ class Driver
     {
         $response     = $this->queryAsArray('GetCapabilities');
         $capabilities = new Capabilities($response, $this->debugging);
+        $this->setProtocolVersion($capabilities->getVersion());
         return $capabilities;
     }
 
@@ -175,5 +184,20 @@ class Driver
         $xurl = parse_url($url);
         parse_str($xurl["query"], $this->parameters);
         $this->url = preg_replace('/\?.+$/', null, $url);
+    }
+
+    /**
+     * @param $version
+     */
+    private function setProtocolVersion($version) {
+        $this->protocolVersion = $version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocolVersion()
+    {
+        return $this->protocolVersion;
     }
 }

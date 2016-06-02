@@ -19,6 +19,8 @@ class FeatureType extends BaseEntity
     protected $keywords;
     protected $maxX;
     protected $maxY;
+    protected $outputFormats;
+    protected $dimensions;
 
     /** @var \Wheregroup\WFS\Entity\Element[] */
     protected $elements;
@@ -72,10 +74,38 @@ class FeatureType extends BaseEntity
     }
 
     /**
+     * @param mixed $outputFormats
+     */
+    public function setOutputFormats($outputFormats)
+    {
+        $formats             = $outputFormats["Format"];
+        $this->outputFormats = is_array($formats) ? $formats : array($formats);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDimensions()
+    {
+        return $this->dimensions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOutputFormats()
+    {
+        return $this->outputFormats;
+    }
+
+    /**
      * @param $data
      */
     protected function setOws_WGS84BoundingBox($data)
     {
+        if(isset($data['@attributes'])){
+            $this->fill($data['@attributes']);
+        }
         foreach ($data as $k => $value) {
             if ($k == "ows_LowerCorner") {
                 list($this->minX, $this->minY) = explode(' ', $data["ows_LowerCorner"]);

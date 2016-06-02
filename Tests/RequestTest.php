@@ -33,6 +33,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         });
         $capabilities = $this->driver->getCapabilities();
         $featureTypes = $capabilities->getFeatureTypes();
+        foreach($featureTypes as $featureType){
+            $shema = $this->driver->describeFeatureType($featureType);
+        }
     }
 
     /**
@@ -67,8 +70,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function getFeature()
     {
         $list = $this->fetchTestXmlFiles("GetFeature/*Res.xml", function ($data, $filePath) {
-            $featureCollection = new FeatureCollection($data);
-            $members           = $featureCollection->getMembers();
+            $featureCollection = new FeatureCollection($data,true);
+            $members           = $featureCollection->getMsembers();
             return $featureCollection;
         });
         var_dump($list);
@@ -122,7 +125,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->driver = new Driver(self::WFS_URL, true);
+        $this->driver = new Driver(self::WFS_URL, false);
     }
 
 
