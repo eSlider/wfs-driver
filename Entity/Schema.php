@@ -24,9 +24,20 @@ class Schema extends BaseEntity
 
     /**
      * Get types
+     *
+     * @return Element[]
      */
-    public function getTypes(){
-
+    public function getTypes()
+    {
+        $types       = array();
+        $complexType = $this->complexTypes[0];
+        $extension   = $complexType->getComplexContent();
+        $elements    = $extension["extension"]["sequence"]["element"];
+        foreach ($elements as $elementData) {
+            $element                      = new Element($elementData, true);
+            $types[ $element->getName() ] = $element;
+        }
+        return $types;
     }
 
 }

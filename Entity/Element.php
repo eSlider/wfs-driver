@@ -33,4 +33,20 @@ class Element extends BaseEntity
         $values          = reset($valueList);
         $this->valueList = is_array($values) ? $values : array($values);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 }

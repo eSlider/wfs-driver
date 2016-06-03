@@ -52,7 +52,7 @@ class Capabilities extends BaseEntity
     }
 
     /**
-     * @return FeatureTypeList
+     * @return FeatureType[]
      */
     public function getFeatureTypes()
     {

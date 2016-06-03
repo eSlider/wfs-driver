@@ -30,4 +30,12 @@ class ComplexType extends BaseEntity
         $this->fill($sequence);
         $this->complexContent = $complexContent;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getComplexContent()
+    {
+        return $this->complexContent;
+    }
 }

@@ -3,6 +3,7 @@ namespace Wheregroup\WFS\Tests;
 
 use Wheregroup\WFS\Component\Driver;
 use Wheregroup\WFS\Entity\Capabilities;
+use Wheregroup\WFS\Entity\Element;
 use Wheregroup\WFS\Entity\FeatureCollection;
 use Wheregroup\WFS\Entity\Schema;
 
@@ -29,13 +30,28 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function getCapabilities()
     {
         $list         = $this->fetchTestXmlFiles("GetCapabilities/*_Res_*.xml", function ($data, $filePath) {
-            return new Capabilities($data, true);
+            $capabilities = new Capabilities($data, true);
+            return $capabilities;
         });
-        $capabilities = $this->driver->getCapabilities();
+        $driver       = $this->driver;
+        $capabilities = $driver->getCapabilities(array(
+            "version" => "2.0.1"
+        ));
         $featureTypes = $capabilities->getFeatureTypes();
-        foreach($featureTypes as $featureType){
-            $shema = $this->driver->describeFeatureType($featureType);
+        /** @var Element[] $schemaTypes */
+        $schemaTypes  = array();
+        foreach ($featureTypes as $featureType) {
+            $schema = $driver->describeFeatureType($featureType);
+            $schemaTypes[$featureType->getName()] = $schema->getTypes();
+            foreach($schemaTypes as $schemaType){
+                // typename=Bundeslaender&maxfeatures=1
+                $features = $driver->getFeature(array(
+                    'typename' => $schemaType->getName(),
+                    "maxfeatures" => 1
+                ));
+            }
         }
+
     }
 
     /**

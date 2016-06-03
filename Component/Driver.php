@@ -64,18 +64,17 @@ class Driver
     }
 
     /**
-     * @param Feature $featureRequest
+     * @param array $request
      * @return array
-     * @throws \Exception
      */
-    public function getFeature(Feature $featureRequest)
+    public function getFeature(array $request = array())
     {
-        return $this->queryAsArray('getFeature', $featureRequest->toXML());
+        return $this->queryAsArray('getFeature', $request );
     }
 
     /**
      * @param FeatureType $featureType
-     * @return array
+     * @return Schema
      * @throws \Exception
      */
     public function describeFeatureType(FeatureType $featureType)
@@ -153,12 +152,13 @@ class Driver
     }
 
     /**
+     * @param $request
      * @return Capabilities
      * @throws \Exception
      */
-    public function getCapabilities()
+    public function getCapabilities(array $request = array())
     {
-        $response     = $this->queryAsArray('GetCapabilities');
+        $response     = $this->queryAsArray('GetCapabilities', $request);
         $capabilities = new Capabilities($response, $this->debugging);
         $this->setProtocolVersion($capabilities->getVersion());
         return $capabilities;
