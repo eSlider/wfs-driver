@@ -11,30 +11,48 @@ use Wheregroup\XML\Entity\BaseEntity;
  */
 class Member extends BaseEntity
 {
-    protected $gmlId;
+    protected $id;
     protected $data;
     protected $type;
+    protected $directedNode;
+    protected $name;
+
+    /** @var Envelope */
+    protected $boundedBy;
 
     /**
+     * @param array $type
      * @param array $data
      */
-    public function __construct($type, array $data)
+    public function __construct($type, array $data, $saveOriginalData = false)
     {
-        $this->type  = $type;
-        $this->gmlId = $data["@attributes"]["gml_id"];
-        $this->data  = $data;
+        $this->type = $type;
+        $this->data = $data;
+        $specs      = array();
 
-        unset($data["@attributes"]);
+        if (isset($data["@attributes"])) {
+            $specs = $data["@attributes"];
+            unset($data["@attributes"]);
+        }
 
-        parent::__construct();
+        foreach ($data as $key => $item) {
+            if (strpos($key, "gml_") === 0) {
+                $specs[ $key ] = $item;
+                unset($data[ $key ]);
+            }
+        }
+
+        parent::__construct($specs, $saveOriginalData);
     }
 
+
     /**
-     * @return string GML ID {TEXT.ID}
+     * @param mixed $boundedBy
      */
-    public function getGmlId()
+    public function setBoundedBy($boundedBy)
     {
-        return $this->gmlId;
+        $envelopeData    = current(array_values($boundedBy));
+        $this->boundedBy = new Envelope($envelopeData);
     }
 
     /**
@@ -54,6 +72,22 @@ class Member extends BaseEntity
      */
     public function getId()
     {
-        return end(explode('.', $this->gmlId));
+        return end(explode('.', $this->id));
+    }
+
+    /**
+     * @return Envelope
+     */
+    public function getBoundedBy()
+    {
+        return $this->boundedBy;
+    }
+
+    /**
+     * @return int SRID
+     */
+    public function getSRID()
+    {
+        return $this->getBoundedBy()->getSRID();
     }
 }

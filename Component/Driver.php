@@ -3,15 +3,16 @@ namespace Wheregroup\WFS\Component;
 
 use Wheregroup\WFS\Entity\Capabilities;
 use Wheregroup\WFS\Entity\Constrain;
+use Wheregroup\WFS\Entity\FeatureCollection;
 use Wheregroup\WFS\Entity\FeatureType;
 use Wheregroup\WFS\Entity\OperationsMetadata;
-use Wheregroup\WFS\Entity\Request\Feature;
 use Wheregroup\WFS\Entity\Schema;
 use Wheregroup\WFS\Entity\ServiceIdentification;
 use Wheregroup\WFS\Entity\ServiceProvider;
 use Wheregroup\XML\Util\Parser;
 
 /**
+ * @property string _lastUrl
  * @author Andriy Oblivantsev <eslider@gmail.com>
  */
 class Driver
@@ -51,7 +52,7 @@ class Driver
     public function __construct($url, $cache = false)
     {
         $this->prepareUrl($url);
-        $this->setCacheQueries($cache);
+        //$this->setCacheQueries($cache);
         $this->debugging = $cache;
     }
 
@@ -69,7 +70,13 @@ class Driver
      */
     public function getFeature(array $request = array())
     {
-        return $this->queryAsArray('getFeature', $request );
+        $request["version"] = $this->getProtocolVersion();
+        $response           = $this->queryAsArray('GetFeature', $request);
+        $featureCollection  = new FeatureCollection(
+            $response,
+            $this->debugging);
+        return $featureCollection;
+
     }
 
     /**
@@ -112,6 +119,7 @@ class Driver
 
             }
         }else{
+            $this->_lastUrl =$url;
             $xmlContent = implode(file($url));
         }
 
@@ -122,7 +130,7 @@ class Driver
      * @param string $requestName
      * @param array  $request
      * @param array  $map
-     * @return array
+     * @return array Response
      * @throws \Exception
      */
     public function queryAsArray($requestName, array $request = array(), array $map = null)

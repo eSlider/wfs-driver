@@ -19,7 +19,6 @@ class FeatureCollection extends BaseEntity
     /** @var Envelope */
     protected $boundedBy;
 
-
     /** @var \Wheregroup\WFS\Entity\Member[] */
     protected $members;
 
@@ -67,10 +66,48 @@ class FeatureCollection extends BaseEntity
     }
 
     /**
+     * Get feature members
      *
+     * @return Member[]
      */
     public function getMembers()
     {
         return $this->members;
+    }
+
+    /**
+     * @return Envelope
+     */
+    public function getBoundedBy()
+    {
+        return $this->boundedBy;
+    }
+
+    /**
+     * Convert multi dimensional[type][member] array structure
+     * to typed Member[]
+     *
+     * @param $memberTypes
+     */
+    protected function setMember($memberTypes)
+    {
+        foreach ($memberTypes as $typeName => $members) {
+            if (!is_numeric(key($members))) {
+                $members = array($members);
+            }
+            foreach ($members as $memberData) {
+                $this->members[] = new Member($typeName, $memberData, $this->saveOriginalData);
+            }
+        }
+    }
+
+    /**
+     * Get SRID
+     *
+     * @return string
+     */
+    public function getSRID()
+    {
+        return $this->getBoundedBy()->getSRID();
     }
 }

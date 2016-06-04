@@ -12,6 +12,8 @@ use Wheregroup\WFS\Entity\Schema;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    const DEBUG_MODE = true;
+
     /** Test XML path */
     const XML_PATH = "vendor/opengis/wfs/2.0.2/examples/";
 
@@ -43,13 +45,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         foreach ($featureTypes as $featureType) {
             $schema = $driver->describeFeatureType($featureType);
             $schemaTypes[$featureType->getName()] = $schema->getTypes();
-            foreach($schemaTypes as $schemaType){
-                // typename=Bundeslaender&maxfeatures=1
-                $features = $driver->getFeature(array(
-                    'typename' => $schemaType->getName(),
-                    "maxfeatures" => 1
-                ));
-            }
+
+
+            $features = $driver->getFeature(array(
+                'typename' => $featureType->getName(),
+                "maxfeatures" => 1
+                // featureid
+            ));
         }
 
     }
@@ -86,8 +88,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function getFeature()
     {
         $list = $this->fetchTestXmlFiles("GetFeature/*Res.xml", function ($data, $filePath) {
-            $featureCollection = new FeatureCollection($data,true);
-            $members           = $featureCollection->getMsembers();
+            $featureCollection = new FeatureCollection($data, true);
+            $members           = $featureCollection->getMembers();
             return $featureCollection;
         });
         var_dump($list);
@@ -141,7 +143,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->driver = new Driver(self::WFS_URL, false);
+        $this->driver = new Driver(self::WFS_URL, self::DEBUG_MODE);
     }
 
 
