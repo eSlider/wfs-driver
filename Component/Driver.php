@@ -66,7 +66,7 @@ class Driver
 
     /**
      * @param array $request
-     * @return array
+     * @return FeatureCollection
      */
     public function getFeature(array $request = array())
     {
