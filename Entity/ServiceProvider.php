@@ -17,7 +17,7 @@ class ServiceProvider extends BaseEntity
     protected $serviceContact;
 
     /**
-     * @return ContactInfo
+     * @return ServiceContact
      */
     public function getContact()
     {
