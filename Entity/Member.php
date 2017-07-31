@@ -17,33 +17,15 @@ class Member extends BaseEntity
     protected $directedNode;
     protected $name;
 
+    /** @var \Wheregroup\WFS\Entity\Geometry */
+    protected $wkbGeom;
+
     /** @var Envelope */
     protected $boundedBy;
 
-    /**
-     * @param array $type
-     * @param array $data
-     */
-    public function __construct($type, array $data, $saveOriginalData = false)
-    {
-        $this->type = $type;
-        $this->data = $data;
-        $specs      = array();
+    protected $tileId;
 
-        if (isset($data["@attributes"])) {
-            $specs = $data["@attributes"];
-            unset($data["@attributes"]);
-        }
-
-        foreach ($data as $key => $item) {
-            if (strpos($key, "gml_") === 0) {
-                $specs[ $key ] = $item;
-                unset($data[ $key ]);
-            }
-        }
-
-        parent::__construct($specs, $saveOriginalData);
-    }
+    protected $gml_id;
 
 
     /**
@@ -89,5 +71,13 @@ class Member extends BaseEntity
     public function getSRID()
     {
         return $this->getBoundedBy()->getSRID();
+    }
+
+    /**
+     * @return Geometry
+     */
+    public function getGeometry()
+    {
+        return $this->wkbGeom;
     }
 }

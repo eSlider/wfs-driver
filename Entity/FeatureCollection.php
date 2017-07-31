@@ -96,9 +96,11 @@ class FeatureCollection extends BaseEntity
                 $members = array($members);
             }
             foreach ($members as $memberData) {
-                $this->members[] = new Member($typeName, $memberData, $this->saveOriginalData);
+                $memberData      = array_merge(current($memberData), array('type' => key($memberData)));
+                $this->members[] = new Member($memberData);
             }
         }
+        $this->members;
     }
 
     /**
